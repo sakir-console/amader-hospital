@@ -1,0 +1,24 @@
+{
+  "name": "amader-hospital",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "aos": "^3.0.0-beta.6",
+    "axios": "^0.26.1",
+    "core-js": "^3.6.5",
+    "mosha-vue-toastify": "^1.0.23",
+    "vue": "^3.0.0",
+    "vue-i18n": "^9.1.9",
+    "vue-router": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.13",
+    "@vue/cli-plugin-router": "~4.5.13",
+    "@vue/cli-service": "~4.5.13",
+    "@vue/compiler-sfc": "^3.0.0"
+  }
+}
