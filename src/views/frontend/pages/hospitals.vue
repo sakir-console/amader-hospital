@@ -5,7 +5,7 @@
       <div class="row align-items-center">
         <div class="col-md-8 col-12">
 
-          <h2 class="breadcrumb-title">Doctors List</h2>
+          <h2 class="breadcrumb-title">Hospital List</h2>
         </div>
 
       </div>
@@ -26,8 +26,15 @@
 
               <div class="filter-widget">
 
+                <div class="form-group"><label>Hospital name</label>
+                  <input @input="searchHospital" type="text" v-model="name" class="form-control"
+                         placeholder="Enter Hospital Name"></div>
+
                 <div class="btn-search">
-                  <button  @click="hospitalView(true)" type="button" class="btn w-100" style="background-color: #c14333;"><i style="color: white;font-size: 18px;" class="fas fa-search-location"></i> Nareby Hospital</button>
+                  <button @click="hospitalView(true)" type="button" class="btn w-100"
+                          style="background-color: #c14333;"><i style="color: white;font-size: 18px;"
+                                                                class="fas fa-search-location"></i> Nearby Hospital
+                  </button>
                 </div>
 
 
@@ -35,18 +42,6 @@
               <div class="filter-widget">
                 <h4>Select Location</h4>
 
-
-                <div class="form-group row">
-                  <label class="col-lg-3 col-form-label" style="font-size: 12px;">Country</label>
-                  <div class="col-lg-9">
-                    <select v-model="parent_con" @change="getDis(parent_con)" class="form-select">
-
-                      <option v-for="(country,index) in countries.data" :key="country.id" :value="country.id">
-                        {{ country.name }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
 
                 <div class="form-group row">
                   <label class="col-lg-3 col-form-label" style="font-size: 12px;">District</label>
@@ -59,9 +54,9 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-lg-3 col-form-label" style="font-size: 12px;">Thana</label>
+                  <label class="col-lg-3 col-form-label" style="font-size: 12px;">Upazila</label>
                   <div class="col-lg-9">
-                    <select v-model="parent_tha"  @change="getTha(parent_tha)" class="form-select">
+                    <select v-model="parent_tha" @change="selTha(parent_tha)" class="form-select">
                       <option v-for="(thana,index) in thanas.data" :key="thana.id" :value="thana.id">
                         {{ thana.name }}
                       </option>
@@ -108,17 +103,17 @@
                   <div class="doc-info-left">
                     <div class="doctor-img">
                       <a href="">
-                        <img src="frontend/assets/img/hos.png" class="img-fluid" alt="User Image">
+                        <img :src="this.asset_url+'/frontend/assets/img/hos.png'" class="img-fluid" alt="User Image">
                       </a>
                     </div>
                     <div class="doc-info-cont" style="margin-bottom: 8px;">
-                      <h4 class="doc-name"><a href="#">{{ hospital.name }}</a></h4>
+                      <h4 class="doc-name"><a v-bind:href=hospitalUrl+hospital.id>{{ hospital.name }}</a></h4>
                       <p class="doc-speciality"><i class="fas fa-map-marker-alt"></i> {{ hospital.addr }}</p>
 
 
                       <div class="clinic-services">
-                        <span style="background: #def9ff;">{{hospital.thana}}</span>
-                        <span> {{hospital.district}}</span>
+                        <span style="background: #def9ff;">{{ hospital.thana_name }}</span>
+                        <span> {{ hospital.district_name }}</span>
                       </div>
                       <div class="rating">
                         <i class="fas fa-star filled"></i>
@@ -134,8 +129,8 @@
                   <div class="doc-info-right">
                     <div class="clini-infos">
                       <ul>
-                        <li><i class="fas fa-location-arrow"></i>Latitude: {{hospital.lat}}</li>
-                        <li><i class="fas fa-location-arrow"></i>Longitude:{{hospital.lng}}   </li>
+                        <li><i class="fas fa-location-arrow"></i>ICU: {{ hospital.icu }}</li>
+                        <li><i class="fas fa-location-arrow"></i>Beds:{{ hospital.beds }}</li>
                       </ul>
                     </div>
 
@@ -146,15 +141,15 @@
           </div>
 
 
-
           <div class="load-more text-center" v-if="!NoData">
-            <div >
+            <div>
               <ul class="pagination mb-4">
                 <li class="page-item disabled">
                   <a class="page-link" href="#" tabindex="-1">Pages:</a>
                 </li>
                 <li v-for="index in hospitals['maxPage']" :key="index" :class="[(page == index) ? 'active':'']">
-                  <a style="color: white;font-weight: 900;" class="page-link" href="#" @click="nextPage(index)">{{ index }}</a>
+                  <a style="color: white;font-weight: 600;color:#15558d" class="page-link" href="#"
+                     @click="nextPage(index)">{{ index }}</a>
                 </li>
 
               </ul>
@@ -176,20 +171,21 @@ export default {
   data() {
     return {
       //Basic
+      hospitalUrl: '/hospital?id=',
       loading: false,
-      NoData:false,
+      NoData: false,
       page: 1,
 
-
-      spec:'',
-      hos:'',
+      name: '',
+      spec: '',
+      hos: '',
       doctors: [],
-      hospitals:[],
-      specialities:[],
+      hospitals: [],
+      specialities: [],
 
       //Location:
 
-      parent: '0',
+      parent: '1',
       parent_con: '',
       parent_dis: '',
       parent_tha: '',
@@ -203,18 +199,22 @@ export default {
 
 
     hospitalView(nearBy) {
-      let areaBody=this.parent
-      if(nearBy===true) {
+      let areaBody = this.parent
+      if (nearBy === true) {
         console.log("nearBy found........." + this.currentLocation.lat)
-        areaBody=this.currentLocation.lat+','+this.currentLocation.lng
+        areaBody = this.currentLocation.lat + ',' + this.currentLocation.lng
       }
       this.loading = true;
 
       //request - AH
-      this.axios.get("hospital/"+areaBody+"/0")
+      this.axios.get("hospital/" + areaBody + "/" + this.page)
           .then(response => {
             this.loading = false;
-            if(response.data.data.length!==0){this.NoData=false}else{this.NoData=true}
+            if (response.data.data.length !== 0) {
+              this.NoData = false
+            } else {
+              this.NoData = true
+            }
             console.log((response.data))
             this.hospitals = response.data
           })
@@ -223,36 +223,45 @@ export default {
             console.error("There was an error!", error);
           });
     },
+
+    searchHospital() {
+      if (this.name == '') {
+        this.hospitalView()
+      } else {
+        this.loading = true;
+
+        //request - AH
+        this.axios.get("hospital/search?q=" + this.name)
+            .then(response => {
+              this.loading = false;
+              if (response.data.data.length !== 0) {
+                this.NoData = false
+              } else {
+                this.NoData = true
+              }
+              console.log((response.data))
+              this.hospitals = response.data
+            })
+            .catch(error => {
+              this.errorMessage = error.message;
+              console.error("There was an error!", error);
+            });
+      }
+
+    },
     nextPage(pg) {
       this.page = pg
-      this.viewDocs()
+      this.hospitalView()
     },
 
 
-
-    //Location
-    getCon() {
+    getDis() {
       // locations request - AH
-      this.axios.get("location/get/all/country/0")
-          .then(response => {
-            console.log((response.data))
-            this.countries = response.data
-
-          })
-          .catch(error => {
-            this.errorMessage = error.message;
-            console.error("There was an error!", error);
-          });
-
-
-    },
-    getDis(con) {
-      // locations request - AH
-      this.axios.get("location/get/" + con + "/district/0")
+      this.axios.get("location/get/" + 1 + "/district/0")
           .then(response => {
             console.log((response.data))
             this.districts = response.data
-            this.parent=con
+
           })
           .catch(error => {
             this.errorMessage = error.message;
@@ -267,7 +276,7 @@ export default {
           .then(response => {
             console.log((response.data))
             this.thanas = response.data
-            this.parent=dis
+            this.parent = dis
           }).catch(error => {
         this.errorMessage = error.message;
         console.error("There was an error!", error);
@@ -276,19 +285,18 @@ export default {
 
     },
     selTha(tha) {
-      this.parent=tha
+      this.parent = tha
     }
 
   },
   mounted() {
     this.hospitalView()
-    this.getCon()
+    this.getDis()
 
 
   }
 }
 </script>
-
 
 
 <style scoped>

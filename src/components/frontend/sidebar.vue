@@ -9,8 +9,8 @@
           <div class="profile-det-info">
             <h3>{{user.name}}</h3>
             <div class="patient-details">
-              <h5><i class="fas fa-birthday-cake"></i> 24 Jul 1983, 38 years</h5>
-              <h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> {{user.addr}}</h5>
+              <h5><i class="fas fa-birthday-cake"></i> {{user.birth}}</h5>
+              <h5 class="mb-0"><i class="fas fa-map-marker-alt"></i>Blood Group: {{user.blood_rh}}</h5>
             </div>
           </div>
         </div>
@@ -21,6 +21,13 @@
 
 
             <li class="active">
+              <router-link :to="{name:'notifications'}">
+
+            <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+              </router-link>
+            </li>
+            <li>
               <router-link :to="{name:'myAccount'}">
 
             <i class="fas fa-users"></i>
@@ -34,6 +41,14 @@
 
               <i class="fas fa-user-cog"></i>
                 <span>Profile Settings</span>
+              </router-link>
+            </li>
+
+            <li>
+              <router-link :to="{name:'addBlood'}">
+
+              <i class="fas fa-clinic-medical"></i>
+                <span>Blood Bank</span>
               </router-link>
             </li>
 
@@ -93,6 +108,9 @@ name: "sidebar",
           .then(response => {
             console.log((response.data))
             localStorage.removeItem('token')
+            localStorage.removeItem('is_dr')
+            localStorage.removeItem('is_amb')
+            localStorage.removeItem('is_adm')
             window.location.reload()
           }).catch(error => {
         this.errorMessage = error.message;

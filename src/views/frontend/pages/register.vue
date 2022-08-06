@@ -13,6 +13,13 @@
                 <div class="login-header">
                   <h3>Registration করুন </h3>
                 </div>
+
+                <div v-if="errors.length!=0" class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Error!</strong>
+                  <li style="text-transform: capitalize;" v-for="(error,index) in errors.fields">{{ index }}: {{ error }} </li>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
                 <form  @submit.prevent="signUP">
                   <div class="form-group form-focus">
                     <input v-model="name" type="text" class="form-control floating">
@@ -74,6 +81,7 @@ export default {
   name: "register",
   data() {
     return {
+      errors:[],
       name:'',
       email:'',
       gender:'',
@@ -93,7 +101,7 @@ export default {
       twoToneButton.innerHTML = "Sign up হচ্ছে";
       twoToneButton.classList.add('spinning');
 
-      // Login request - AH
+      //  request - AH
       this.axios.post("auth/register", this.pBody({
         "name": this.name,
         "email": this.email,
@@ -112,14 +120,18 @@ export default {
               localStorage.setItem('is_dr', response.data.user.is_doctor);
               localStorage.setItem('is_amb', response.data.user.has_ambulance);
               console.log("Token stored: "+localStorage.getItem('token'))
-              this.toast("Login successful","","success")
+
+
+              this.toast("Registration successful","","success")
               window.location = "/my-account";
 
 
             }else{
               twoToneButton.classList.remove('spinning');
               twoToneButton.innerHTML = "Submit করুন";
+              this.errors=response.data
               this.toast("Registration failed",response.data.error,"danger")
+
             }
           })
           .catch(error => {

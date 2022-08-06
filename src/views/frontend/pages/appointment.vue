@@ -19,21 +19,57 @@
         <div class="col-12">
           <div class="card">
             <div class="card-body">
-              <div class="booking-doc-info">
-                <a href="" class="booking-doc-img">
-                  <img src="frontend/assets/img/doct.png" alt="User Image">
-                </a>
-                <div class="booking-info">
-                  <h4><a href="doctor-profile.html">Dr. Appointment</a></h4>
-                  <div class="rating">
-                    <i class="fas fa-star filled"></i>
-                    <i class="fas fa-star filled"></i>
-                    <i class="fas fa-star filled"></i>
-                    <i class="fas fa-star filled"></i>
-                    <i class="fas fa-star"></i>
+              <div class="doctor-widget">
+                <div class="doc-info-left">
+                  <div class="doctor-img">
+                    <img :src="this.getPP(doctor)" style="
+
+" class="img-fluid" alt="Hospital Image">
+                  </div>
+                  <div class="doc-info-cont">
+                    <h4 class="doc-name">{{ doctor.name }}</h4>
+
+
+                    <div class="rating">
+                      <span class="d-inline-block average-rating">({{ doctor.name }})</span>
+                      <i class="fas fa-star filled"></i>
+                      <i class="fas fa-star filled"></i>
+                      <i class="fas fa-star filled"></i>
+                      <i class="fas fa-star filled"></i>
+                      <i class="fas fa-star"></i>
+                    </div>
+                    <div class="clinic-details">
+                      <px class="doc-location"><i class="fa fa-book-medical"> Specialist: </i> {{ doctor.sector }}</px>
+                    </div>
+                    <div class="clinic-details">
+                      <a class="btn btn-white call-btn">
+                        <i class="fas fa-clinic-medical"></i>
+                        Hospitals:
+                      </a>
+
+                      <span v-for="(hospital,index) in doc_hospitals" :key="hospital.id" style="padding: 6px;border: 1px dotted #2af7ff;margin-left: 12px;">
+
+<a v-bind:href=hospitalUrl+hospital.id>
+                        {{ hospital.name }}
+</a>
+                      </span>
+
+                    </div>
 
                   </div>
-                  <p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i>Bangladesh</p>
+                </div>
+                <div class="doc-info-right">
+                  <div class="clini-infos">
+                    <ul>
+                      <li><i class="fa fa-notes-medical"></i> Qualifications: {{ doctor.qualification }}</li>
+                      <li><i class="fa fa-notes-medical"></i> Reg. No: {{ doctor.reg_no }}</li>
+                      <li><i class="fa fa-notes-medical"></i>Dr. Code: {{ doctor.doctor_code }}</li>
+                      <li><i class="fa fa-notes-medical"></i>Fee: ৳{{ doctor.fee }}</li>
+                      <li><i class="fa fa-notes-medical"></i>Follow up fee: ৳{{ doctor.follow_up_fee }}</li>
+                    </ul>
+                  </div>
+
+
                 </div>
               </div>
             </div>
@@ -61,6 +97,11 @@
                       <div class="col-lg-12">
                         <div class="token-slot mt-2">
 
+                          <div v-if="errors.length!=0" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error!</strong>
+                            <li style="text-transform: capitalize;" v-for="(error,index) in errors.fields">{{ index }}: {{ error }} </li>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
                           <div class=" form-group form-focus" style="width: 34%;">
                             <input v-model="date" type="date" class="form-control floating" style="height: 60px">
                             <label class="focus-label">Select Date</label></div>
@@ -103,16 +144,36 @@ export default {
   name: "appointment",
   data() {
     return {
+      errors:[],
+      hospitalUrl:'/hospital?id=',
       loading: false,
       page: 1,
       spec:'',
       sch_id:'',
       date:'',
+      doctor:[],
+      doc_hospitals:[],
       schedules: []
 
     }
   },
   methods: {
+
+
+    viewDoctor() {
+      this.loading = true
+      this.axios.get("doctor/profile/" + urlParams.get('doc'))
+          .then(response => {
+            this.loading = false
+            console.log((response.data))
+            this.doctor = response.data.info
+            this.doc_hospitals = response.data.hospitals
+          }).catch(error => {
+        this.errorMessage = error.message;
+        console.error("There was an error!", error);
+      });
+    },
+
 
     //  FETCH request - AH
     viewSchedules() {
@@ -142,6 +203,7 @@ export default {
             window.location.href = '/success';
           }, 3000);
         } else {
+          this.errors=response.data
           this.toast(response.data.error, "", "danger")
         }
 
@@ -198,6 +260,7 @@ export default {
   },
   mounted() {
     this.viewSchedules()
+    this.viewDoctor()
 
   }
 }

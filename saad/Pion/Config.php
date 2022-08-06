@@ -8,7 +8,8 @@ class Config {
     private static string $active;
     private static array $pioncfg = [
         'ignore'=>[],
-        'map'=>[]
+        'map'=>[],
+        'only'=>[]
     ];
     private static object $all;
 
@@ -136,6 +137,17 @@ class Config {
     }
 
     public static function ignorePush(string $path){
+        if(sizeof(self::$pioncfg['only'])){
+            $in = false;
+            foreach(self::$pioncfg['only'] as $only){
+                if(strpos($path, $only) === 0){
+                    $in = true;
+                }
+            }
+            if(!$in){
+                return true;
+            }
+        }
         return in_array($path, self::$pioncfg['ignore']);
     }
 }

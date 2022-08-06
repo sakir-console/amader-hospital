@@ -28,8 +28,7 @@
 
                             <div class="upload-img">
                               <div class="">
-                                Uploading: {{ uploadPercent }} %
-                                <br>
+
                                 <span><i class="fa fa-upload"></i> Change Avater</span>
                                 <input type="file" ref="photo" name="avatar" accept=".png, .jpg, .jpeg" @change="onAvatarChange"/>
                               </div>
@@ -107,37 +106,35 @@
                           <input v-model="addr" type="text" class="form-control">
                         </div>
                       </div>
-
-                      <div class="upload-img">
+<hr>
+                      <div class="col-12 col-md-6 upload-img">
                         <div class="">
-                          <span><i class="fa fa-upload"></i> NID Front</span>
-                          <input type="file" ref="photo" name="nid_f" accept=".png, .jpg, .jpeg" @change="onNidFChange"/>
+                          <span><i class="fa fa-upload"></i> NID Front: </span>
+                          <hr>
+                          <img class="img-fluid" :src="`https://amaderhospital.com/`+nid_f" alt="Nid front" style="height: 260px;">
+                          <hr>
+                          <input type="file" ref="nid" name="nid_f" accept=".png, .jpg, .jpeg" @change="onNidFChange"/>
+                        </div>
+                        <small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
+
+                      </div>
+
+                      <div class="col-12 col-md-6 upload-img">
+                        <div class="">
+                          <span><i class="fa fa-upload"></i> NID Back: </span>
+                          <hr>
+                          <img class="img-fluid" :src="`https://amaderhospital.com/`+nid_b" alt="Nid back" style="height: 260px;">
+                          <hr>
+
+                          <input type="file" ref="nid" name="nid_b" accept=".png, .jpg, .jpeg" @change="onNidBChange"/>
                         </div>
                         <small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
                       </div>
 
-                      <div class="upload-img">
-                        <div class="">
-                          <span><i class="fa fa-upload"></i> NID Back</span>
-                          <input type="file" ref="photo" name="nid_b" accept=".png, .jpg, .jpeg" @change="onNidBChange"/>
-                        </div>
-                        <small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
-                      </div>
 
 
-                      <div class="form-group row">
-                        <label class="col-lg-3 col-form-label">Country</label>
-                        <div class="col-lg-9">
-                          <select v-model="parent_con" @change="getDis(parent_con)" class="form-select">
-
-                            <option v-for="(country,index) in countries.data" :key="country.id" :value="country.id">
-                              {{ country.name }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="form-group row">
+<hr>
+                      <div class="col-12 col-md-6 form-group row">
                         <label class="col-lg-3 col-form-label">District</label>
                         <div class="col-lg-9">
                           <select v-model="parent_dis" @change="getTha(parent_dis)" class="form-select">
@@ -147,20 +144,32 @@
                           </select>
                         </div>
                       </div>
-                      <div class="form-group row">
-                        <label class="col-lg-3 col-form-label">Thana</label>
+                      <div class="col-12 col-md-6 form-group row">
+                        <label class="col-lg-3 col-form-label">Upazila</label>
                         <div class="col-lg-9">
                           <select v-model="parent_tha" class="form-select">
+
                             <option v-for="(thana,index) in thanas.data" :key="thana.id" :value="thana.id">
+
                               {{ thana.name }}
                             </option>
                           </select>
                         </div>
                       </div>
+<hr>
 
+
+                    </div>
+
+                    <div v-if="errors.length!=0" class="alert alert-danger alert-dismissible fade show" role="alert">
+                      <strong>Error!</strong>
+                      <li style="text-transform: capitalize;" v-for="(error,index) in errors.fields">{{ index }}: {{ error }} </li>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <div class="submit-section">
                       <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                      Updating: {{ uploadPercent }} %
+                      <br>
                     </div>
                   </form>
 
@@ -187,6 +196,9 @@ name: "profileSetting",
 
 data() {
   return {
+    has_nid:false,
+    new_dp:false,
+    errors:[],
     name:'',
     avatar:'',
     username:'',
@@ -213,20 +225,26 @@ data() {
     parent_tha: '0',
     countries: [],
     districts: [],
-    thanas: []
+    thanas: [],
   }
 },
 methods: {
 
   updateProfile(){
-    if(this.$refs.photo){
+
       this.showUploadProgress = true
       this.processingUpload = true
       this.uploadPercent = 0
       let formData = new FormData()
+    if(this.new_dp){
       formData.append('photo', this.avatar)
+    }
+
+    if(!this.has_nid){
+      formData.append('nid', this.nid)
       formData.append('nid_front', this.nid_f)
-      formData.append('nid_back', this.nid_b)
+      formData.append('nid_back', this.nid_b)}
+
       formData.append('name', this.name)
       formData.append('username', this.username)
       formData.append('email', this.email)
@@ -235,7 +253,6 @@ methods: {
       formData.append('gender', this.gender)
       formData.append('blood_group', this.bg)
       formData.append('addr', this.addr)
-      formData.append('nid', this.nid)
       formData.append('thana', this.parent_tha)
 
       this.axios.post("user/update", formData, {
@@ -253,9 +270,10 @@ methods: {
         if (response.data.success == true) {
           this.toast(response.data.message, "", "success")
         } else {
+          this.errors=response.data
           this.toast(response.data.error, "", "danger")
         }
-      }) .catch( (error) => {
+      }).catch( (error) => {
             if(error.response){
               this.err=true;
               this.errMsg=error.response.data.data;
@@ -267,17 +285,31 @@ methods: {
             this.showUploadProgress = false
             this.processingUpload = false
           })
-    }
+
   },
 
 
-  getCon() {
-    // locations request - AH
-    this.axios.get("location/get/all/country/0")
+  viewInfo() {
+    // Info request - AH
+    this.axios.get("/user")
         .then(response => {
           console.log((response.data))
-          this.countries = response.data
-          this.getDis(this.parent)
+          this.name=response.data['data']['name']
+          this.username=response.data['data']['username']
+          this.email=response.data['data']['email']
+          this.phone=response.data['data']['phone']
+          this.gender=response.data['data']['gender']
+          this.birth=response.data['data']['birth']
+          this.bg=response.data['data']['blood_rh']
+          this.phone=response.data['data']['phone']
+          this.nid=response.data['data']['nid']
+          this.addr=response.data['data']['addr']
+          this.parent_tha=response.data['data']['thana']
+          this.nid_f=response.data['data']['nid_front']
+          this.nid_b=response.data['data']['nid_back']
+if(response.data['user']['nid']){
+  this.has_nid=true;
+}
         })
         .catch(error => {
           this.errorMessage = error.message;
@@ -286,13 +318,14 @@ methods: {
 
 
   },
-  getDis(con) {
+
+  getDis() {
     // locations request - AH
-    this.axios.get("location/get/" + con + "/district/0")
+    this.axios.get("location/get/" + 1 + "/district/0")
         .then(response => {
           console.log((response.data))
           this.districts = response.data
-          this.getTha(this.parent)
+
         })
         .catch(error => {
           this.errorMessage = error.message;
@@ -306,6 +339,7 @@ methods: {
     this.axios.get("location/get/" + dis + "/thana/0")
         .then(response => {
           console.log((response.data))
+          console.log("Thana function---------------------")
           this.thanas = response.data
         }).catch(error => {
       this.errorMessage = error.message;
@@ -316,18 +350,23 @@ methods: {
   },
 
   onAvatarChange(e) {
+    this.new_dp=true
     this.avatar = e.target.files[0]
   },
   onNidFChange(e) {
+    this.has_nid=false
     this.nid_f = e.target.files[0]
   } ,
   onNidBChange(e) {
+    this.has_nid=false
     this.nid_b = e.target.files[0]
   } ,
 
 },
 mounted() {
-  this.getCon()
+  this.getDis()
+
+  this.viewInfo()
 }
 }
 </script>

@@ -9,151 +9,56 @@
           </div>
           <div class="about-content aos" data-aos="fade-up">
             <p>{{$t('home_apmnt_Subttl')}}</p>
-            <a href="">{{$t('apmnt')}}</a>
+            <router-link :to="{name:'doctors'}">{{$t('apmnt')}}</router-link>
           </div>
         </div>
         <div class="col-lg-8">
           <div class="d-flex justify-content-around" data-aos="fade-up" data-aos-duration="700">
 
-            <div class="col-lg-4 mx-1 mb-3 aos profile-widget">
+            <div v-for="(doctor,index) in doctors.data" :key="doctor.id" class="col-lg-4 mx-1 mb-3 aos profile-widget">
               <div class="doc-img">
-                <a href="doctor-profile.html">
-                  <img class="img-fluid" alt="User Image" src="frontend/assets/img/doctors/doctor-01.jpg">
+                <a href="#">
+                  <img :src="this.getPP(doctor)" class="img-fluid" alt="User Image" style="width: 200px;height: 150px;">
                 </a>
-                <a href="javascript:void(0)" class="fav-btn">
+                <a href="#" class="fav-btn">
                   <i class="far fa-bookmark"></i>
                 </a>
               </div>
               <div class="pro-content">
                 <h3 class="title">
-                  <a href="doctor-profile.html">Ruby Perrin</a>
+                  <a v-bind:href=appointmentUrl+doctor.uid>{{ doctor.name }}</a>
                   <i class="fas fa-check-circle verified"></i>
                 </h3>
-                <p class="speciality">MDS - Periodontology and Oral Implantology, BDS</p>
+                <p class="speciality" style="min-height: 10px;"> {{doctor.qualification}}</p>
                 <div class="rating">
                   <i class="fas fa-star filled"></i>
                   <i class="fas fa-star filled"></i>
                   <i class="fas fa-star filled"></i>
                   <i class="fas fa-star filled"></i>
                   <i class="fas fa-star filled"></i>
-                  <span class="d-inline-block average-rating">(17)</span>
+
                 </div>
                 <ul class="available-info">
+
                   <li>
-                    <i class="fas fa-map-marker-alt"></i> Florida, USA
+                    @{{ doctor.username }}
                   </li>
                   <li>
-                    <i class="far fa-clock"></i> Available on Fri, 22 Mar
-                  </li>
-                  <li>
-                    <i class="far fa-money-bill-alt"></i> ৳ 105
-                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Lorem Ipsum"></i>
+                  <i class="fas fa-money-bill"></i>Fee: ৳{{doctor.fee}}
+                   <i class="far fa-money-bill-alt"></i>Follow-up fee: ৳{{doctor.follow_up_fee}}
                   </li>
                 </ul>
                 <div class="row row-sm">
                   <div class="col-6">
-                    <a href="doctor-profile.html" class="btn view-btn">{{$t('view_prf')}}</a>
+                    <a href="#" class="btn view-btn"><i style="color: green;font-size: 18px;" class="fas fa-check-circle verified"></i>. Verified</a>
                   </div>
                   <div class="col-6">
-                    <a href="booking.html" class="btn book-btn">{{$t('apmnt')}}</a>
+                    <a v-bind:href=appointmentUrl+doctor.uid class="btn book-btn">{{$t('apmnt')}}</a>
                   </div>
                 </div>
               </div>
             </div>
 
-
-            <div class="col-lg-4 mx-1 mb-3 aos profile-widget">
-              <div class="doc-img">
-                <a href="doctor-profile.html">
-                  <img class="img-fluid" alt="User Image" src="frontend/assets/img/doctors/doctor-02.jpg">
-                </a>
-                <a href="javascript:void(0)" class="fav-btn">
-                  <i class="far fa-bookmark"></i>
-                </a>
-              </div>
-              <div class="pro-content">
-                <h3 class="title">
-                  <a href="doctor-profile.html">Darren Elder</a>
-                  <i class="fas fa-check-circle verified"></i>
-                </h3>
-                <p class="speciality">BDS, MDS - Oral & Maxillofacial Surgery</p>
-                <div class="rating">
-                  <i class="fas fa-star filled"></i>
-                  <i class="fas fa-star filled"></i>
-                  <i class="fas fa-star filled"></i>
-                  <i class="fas fa-star filled"></i>
-                  <i class="fas fa-star"></i>
-                  <span class="d-inline-block average-rating">(35)</span>
-                </div>
-                <ul class="available-info">
-                  <li>
-                    <i class="fas fa-map-marker-alt"></i> Newyork, USA
-                  </li>
-                  <li>
-                    <i class="far fa-clock"></i> Available on Fri, 22 Mar
-                  </li>
-                  <li>
-                    <i class="far fa-money-bill-alt"></i> ৳ 84
-                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Lorem Ipsum"></i>
-                  </li>
-                </ul>
-                <div class="row row-sm">
-                  <div class="col-6">
-                    <a href="doctor-profile.html" class="btn view-btn">{{$t('view_prf')}}</a>
-                  </div>
-                  <div class="col-6">
-                    <a href="booking.html" class="btn book-btn">{{$t('apmnt')}}</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="col-lg-4 mx-1 mb-3 aos profile-widget">
-              <div class="doc-img">
-                <a href="doctor-profile.html">
-                  <img class="img-fluid" alt="User Image" src="frontend/assets/img/doctors/doctor-03.jpg">
-                </a>
-                <a href="javascript:void(0)" class="fav-btn">
-                  <i class="far fa-bookmark"></i>
-                </a>
-              </div>
-              <div class="pro-content">
-                <h3 class="title">
-                  <a href="doctor-profile.html">Deborah Angel</a>
-                  <i class="fas fa-check-circle verified"></i>
-                </h3>
-                <p class="speciality">MBBS, MD - General Medicine, DNB - Cardiology</p>
-                <div class="rating">
-                  <i class="fas fa-star filled"></i>
-                  <i class="fas fa-star filled"></i>
-                  <i class="fas fa-star filled"></i>
-                  <i class="fas fa-star filled"></i>
-                  <i class="fas fa-star"></i>
-                  <span class="d-inline-block average-rating">(27)</span>
-                </div>
-                <ul class="available-info">
-                  <li>
-                    <i class="fas fa-map-marker-alt"></i> Georgia, USA
-                  </li>
-                  <li>
-                    <i class="far fa-clock"></i> Available on Fri, 22 Mar
-                  </li>
-                  <li>
-                    <i class="far fa-money-bill-alt"></i> $100 - $400
-                    <i class="fas fa-info-circle" data-bs-toggle="tooltip" title="Lorem Ipsum"></i>
-                  </li>
-                </ul>
-                <div class="row row-sm">
-                  <div class="col-6">
-                    <a href="doctor-profile.html" class="btn view-btn">{{$t('view_prf')}}</a>
-                  </div>
-                  <div class="col-6">
-                    <a href="booking.html" class="btn book-btn">{{$t('apmnt')}}</a>
-                  </div>
-                </div>
-              </div>
-            </div>
 
 
 
@@ -169,7 +74,40 @@
 
 <script>
 export default {
-name: "Home-doctors"
+name: "Home-doctors",
+  data() {
+    return {
+      appointmentUrl:'/appointment?doc=',
+      loading: false,
+      page: 1,
+      NoData:false,
+
+      doctors: []
+
+    }
+  },
+  methods: {
+
+    // viewTopDocs FETCH request - AH
+    viewTopDocs() {
+      this.loading = true
+      this.axios.get("sitedata/top")
+          .then(response => {
+            this.loading = false
+            if(response.data.data.length!==0){this.NoData=false}else{this.NoData=true}
+            console.log((response.data))
+            this.doctors = response.data
+          }).catch(error => {
+        this.errorMessage = error.message;
+        console.error("There was an error!", error);
+      });
+    },
+
+  },
+  mounted() {
+    this.viewTopDocs()
+
+  }
 }
 </script>
 

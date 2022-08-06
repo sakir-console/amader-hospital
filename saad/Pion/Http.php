@@ -4,6 +4,8 @@ namespace Pion;
 use Exception;
 
 class Http{
+
+    private static int $upLen = 0;
     
     public static function login(string $user = '', string $pass = ''){
         $url = readline('Url: ');
@@ -61,6 +63,20 @@ class Http{
         throw new \Exception($err);
     }
 
+    public static function progress($ch, $dltotal, $dlnow, $uptotal, $upnow){
+        if($uptotal <= 0){
+            return;
+        }
+        $per = round($upnow * 100/$uptotal);
+        Color::green();
+        $str = "[$per%] Uploading...\r";
+        echo $str;
+        Color::reset();
+        if($per >= 100){
+            self::$upLen = strlen($str);
+        }
+    }
+
     
     public static function rawPost(string $url, array $fields, array $files = []){
         if($files){
@@ -74,9 +90,19 @@ class Http{
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
 
+        if(sizeof($files) > 0){
+            curl_setopt($ch, CURLOPT_NOPROGRESS, false);
+            curl_setopt($ch, CURLOPT_PROGRESSFUNCTION, '\Pion\Http::progress');
+            echo PHP_EOL;
+        }
+
         $res = curl_exec($ch);
         $err = curl_error($ch);
         curl_close($ch);
+        if(self::$upLen){
+            Pion::clear(self::$upLen);
+            self::$upLen = 0;
+        }
         if(!$err){
             return $res;
         }

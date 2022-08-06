@@ -4,6 +4,7 @@ import router from './router'
 import i18n from './locales/i18n'
 import AOS from "aos";
 import axios from "axios";
+
 // import the library
 import { createToast } from 'mosha-vue-toastify';
 // import the styling for the toast
@@ -14,9 +15,9 @@ const app = createApp(App);
 app.AOS = new AOS.init({ disable: "phone" , duration:400
     });
 
-const asset_url='';
+//const asset_url='';
 
-//const asset_url = '/themes/default/';
+const asset_url = '/themes/default/';
 const toastBar = (title,des,type) => {
     createToast({
         title: title,
@@ -50,6 +51,21 @@ function showPosition(position) {
     MyLng=Location.lng
 }
 
+// 02:24 PM, 04-Jan-2022
+
+
+const dateFormat = (num) => {
+    const date = new Date(num * 1000);
+    const [day, month, date_int, year] = date.toDateString().split(' ');
+    let [h, min, s] = date.toTimeString().split(' ')[0].split(':');
+    let am_pm = 'AM';
+    if(h > 12){
+        h-=12;
+        am_pm = 'PM';
+    }
+    let str = `${h}:${min} ${am_pm} ${day}, ${month} ${year}`;
+    return str
+}
 const formHelper= (data)=>{
     const FD=new FormData();
     for(let k in data){
@@ -98,6 +114,7 @@ app.config.globalProperties.axios=instance
 app.config.globalProperties.pBody=formHelper
 app.config.globalProperties.getDP=getDP
 app.config.globalProperties.getPP=getPP
+app.config.globalProperties.getTime=dateFormat
 
 app.config.globalProperties.toast=toastBar
 app.config.globalProperties.asset_url=asset_url

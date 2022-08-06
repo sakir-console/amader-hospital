@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-lg-6">
                           <div class="info-list">
-                            <div class="title">Thana Name</div>
+                            <div class="title">My address</div>
                             <div class="text">  {{user.addr}}</div>
 
                           </div>
@@ -53,14 +53,14 @@
                         <div class="col-lg-6">
                           <div class="info-list">
                             <div class="title">Phone number</div>
-                            <div class="text">01784378437</div>
+                            <div class="text">{{user.phone}}</div>
 
                           </div>
                         </div>
                         <div class="col-lg-6">
                           <div class="info-list">
                             <div class="title">NID Number</div>
-                            <div class="text">4916 0606 4635 5064</div>
+                            <div class="text">{{user.nid}}</div>
                           </div>
                         </div>
 
@@ -75,22 +75,32 @@
                     <div class="row">
                       <div class="col-lg-6">
                         <div class="account-card bg-success-light">
-                          <span>Patient Panel </span> (Me as Patient)
+                          <router-link :to="{name:'patientDash'}">  <span>Patient Panel </span>
+                          </router-link>
+                          (Me as Patient)
                         </div>
                       </div>
-                      <div class="col-lg-6">
+                      <div v-if="is_doc" class="col-lg-6">
                         <div class="account-card bg-info-light">
-                          <span>Doctor's Panel</span> (Me as Doctor)
+                          <router-link :to="{name:'doctorDash'}">
+                          <span>Doctor's Panel</span>
+
+                          </router-link>
+                          (Me as Doctor)
                         </div>
                       </div>
-                      <div class="col-lg-6">
+                      <div v-if="is_amb" class="col-lg-6">
                         <div class="account-card bg-purple-light">
-                          <span>Ambulance</span> (Owner Panel)
+                          <router-link :to="{name:'ambulanceDash'}"> <span>Ambulance</span>
+                          </router-link>
+                            (Owner Panel)
                         </div>
                       </div>
-                      <div class="col-lg-6">
+                      <div v-if="is_adm" class="col-lg-6">
                         <div class="account-card bg-warning-light">
-                          <span>Admin panel</span> Global admin
+                          <a href="https://admin.amaderhospital.com"> <span>Admin panel</span>
+                          </a>
+                          Global admin
                         </div>
                       </div>
                       <!-- <div class="col-md-12 text-center">
@@ -123,7 +133,7 @@
                     <i class="fas fa-ambulance"></i>
                   </div>
                   <div class="looking-info">
-                    <a href="pharmacy-search.html" class="looking-link">Find ambulance</a>
+                    <a href="" class="looking-link">Find ambulance</a>
                     <p>We provide the a wide range of medical ambulance services opportunity.</p>
                   </div>
                   <div class="looking-big-icon">
@@ -162,6 +172,9 @@ export default {
   data() {
     return {
       page: 1,
+      is_doc:localStorage.getItem("is_dr") === "1",
+      is_amb:localStorage.getItem("is_amb") === "1",
+      is_adm:localStorage.getItem("is_adm") === "1",
       id: '',
       name: '',
       user: []
@@ -172,6 +185,7 @@ export default {
     viewUser() {
       this.axios.get("user")
           .then(response => {
+
             console.log((response.data))
             this.user = response.data.data
           }).catch(error => {

@@ -1,2 +1,4 @@
 [map]
 dist=themes/default
+[only]
+dist

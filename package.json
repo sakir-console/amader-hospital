@@ -13,7 +13,8 @@
     "mosha-vue-toastify": "^1.0.23",
     "vue": "^3.0.0",
     "vue-i18n": "^9.1.9",
-    "vue-router": "^4.0.0-0"
+    "vue-router": "^4.0.0-0",
+    "vue-select": "^3.18.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.13",

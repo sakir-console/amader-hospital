@@ -7,11 +7,16 @@
           <div class="account-content">
             <div class="row align-items-center justify-content-center">
               <div class="col-md-7 col-lg-6 login-left">
-                <img :src="this.asset_url+'frontend/assets/img/login-banner.png'" class="img-fluid" alt="Doccure Login">
+                <img :src="this.asset_url+'frontend/assets/img/login-banner.png'" class="img-fluid" alt="AmaderHospital Login">
               </div>
               <div class="col-md-12 col-lg-6 login-right">
                 <div class="login-header">
                   <h3>লগইন করুন </h3>
+                </div>
+                <div v-if="errors.length!=0" class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Error!</strong>
+                  <li style="text-transform: capitalize;" v-for="(error,index) in errors.fields">{{ index }}: {{ error }} </li>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <form  @submit.prevent="signIN">
                   <div class="form-group form-focus">
@@ -61,7 +66,7 @@ export default {
   name: "login",
   data() {
     return {
-
+      errors:[],
       login: '',
       password: '',
       result: false,
@@ -84,6 +89,7 @@ export default {
               twoToneButton.innerHTML = "অপেক্ষা করুন";
 
               localStorage.removeItem('token')
+              localStorage.setItem("user", response.data.user.id)
               localStorage.setItem('token', response.data.token);
               localStorage.setItem('nid', response.data.user.nid);
               localStorage.setItem('is_dr', response.data.user.is_doctor);
@@ -95,8 +101,8 @@ export default {
               setTimeout(()=>{
                 if(response.data.user.is_admin){
 
-                  window.location = 'http://localhost:8081'+'/login-'+response.data.token;
-                  //window.location = '//admin.'+location.host+'/login-'+response.data.token;
+                 // window.location = 'http://localhost:8081'+'/login-'+response.data.token;
+                  window.location = '//admin.'+location.host+'/login-'+response.data.token;
                 }else{
                   window.location = "/my-account";
 
@@ -106,6 +112,7 @@ export default {
             }else{
               twoToneButton.classList.remove('spinning');
               twoToneButton.innerHTML = "প্রবেশ করুন";
+              this.errors=response.data
                this.toast("Login failed",response.data.error,"danger")
             }
           })

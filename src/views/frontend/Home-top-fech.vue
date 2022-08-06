@@ -13,8 +13,8 @@
                 <div class="doctor-book-card-content tile-card-content-1">
                   <div>
                     <h3 class="card-title mb-0">{{$t('spec_drs')}}</h3>
-                    <a href="search.html" class="btn book-btn1 px-3 py-2 mt-3 btn-one-light"
-                       tabindex="0">{{$t('apmnt')}}</a>
+                    <router-link :to="{name:'doctors'}" class="btn book-btn1 px-3 py-2 mt-3 btn-one-light"
+                                 tabindex="0">{{$t('apmnt')}}</router-link>
                   </div>
                 </div>
               </div>
@@ -25,8 +25,7 @@
                 <div class="doctor-book-card-content tile-card-content-1">
                   <div>
                     <h3 class="card-title mb-0">{{$t('ambulance_service')}}</h3>
-                    <a href="pharmacy-search.html"
-                       class="btn book-btn1 px-3 py-2 mt-3 btn-one-light" tabindex="0">{{$t('find')}}</a>
+                    <router-link :to="{name:'ambulance'}" class="btn book-btn1 px-3 py-2 mt-3 btn-one-light" tabindex="0">{{$t('find')}}</router-link>
                   </div>
                 </div>
               </div>
@@ -37,8 +36,8 @@
                 <div class="doctor-book-card-content tile-card-content-1">
                   <div>
                     <h3 class="card-title mb-0">{{$t('bld_ser')}}</h3>
-                    <a href="" class="btn book-btn1 px-3 py-2 mt-3 btn-one-light"
-                       tabindex="0">{{$t('find')}}</a>
+                    <router-link :to="{name:'blood'}" class="btn book-btn1 px-3 py-2 mt-3 btn-one-light"
+                                 tabindex="0">{{$t('find')}}</router-link>
                   </div>
                 </div>
               </div>

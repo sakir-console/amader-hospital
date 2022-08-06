@@ -25,13 +25,22 @@
                     <div class="col-12 col-md-6">
                       <div class="form-group">
                         <label>Car Type</label>
-                        <input v-model="ct" type="text" class="form-control">
+                        <select v-model="ct" class="form-select form-control">
+                          <option value="AC">AC</option>
+                          <option value="Non_AC">Non AC</option>
+
+                        </select>
                       </div>
                     </div>
                     <div class="col-12 col-md-6">
                       <div class="form-group">
                         <label>Car Model</label>
-                        <input v-model="cm" type="text" class="form-control">
+                        <select v-model="cm" class="form-select form-control">
+                          <option value="Small">Small</option>
+                          <option value="Medium">Medium</option>
+                          <option value="Large">Large</option>
+
+                        </select>
                       </div>
                     </div>
 
@@ -43,82 +52,103 @@
                     </div>
                     <div class="col-12 col-md-6">
                       <div class="form-group">
-                        <label>NID</label>
+                        <label>Basic Life support</label>
+                        <select v-model="oxygen" class="form-select form-control">
+                          <option value="General">General</option>
+                          <option value="oxygen_support">Oxygen Support</option>
+                          <option value="icu_support">ICU Support</option>
+                          <option value="nicu_support">NICU Support</option>
+                        </select>
+                      </div>
+                    </div>      <div class="col-12 col-md-6">
+                      <div class="form-group">
+                        <label>Rate</label>
+                        <input v-model="rate" type="text" class="form-control">
+                      </div>
+                    </div>      <div class="col-12 col-md-6">
+                      <div class="form-group">
+                        <label>Address</label>
+                        <input v-model="addr" type="text" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                      <div class="form-group">
+                        <label>NID Number:</label>
                         <input v-model="nid" type="number" class="form-control">
                       </div>
                     </div>
 
 
-                    <br>
-                    <div class="upload-img">
-                      Uploading: {{ uploadPercent }} %
-                      <br>
-                      <br>
+
+
+                    <hr>
+
+                    <div class="col-12 col-md-6 upload-img">
                       <div class="">
-                        <span><i class="fa fa-upload"></i> Car license</span>
+                        <span><i class="fa fa-upload"></i> NID Front: </span>
+
+                        <hr>
+                        <input type="file" ref="photo" name="nid_f" accept=".png, .jpg, .jpeg" @change="onNidFChange"/>
+                      </div>
+                      <small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
+
+                    </div>
+
+                    <div class="col-12 col-md-6 upload-img">
+                      <div class="">
+                        <span><i class="fa fa-upload"></i> NID Back: </span>
+                        <hr>
+                        <input type="file" ref="photo" name="nid_f" accept=".png, .jpg, .jpeg" @change="onNidBChange"/>
+                      </div>
+                      <small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
+                    </div>
+
+                    <hr>
+
+                    <div class="col-12 col-md-6 upload-img">
+                      <div class="">
+                        <span><i class="fa fa-upload"></i> Car license: </span>
+
+                        <hr>
                         <input type="file" ref="photo" name="nid_f" accept=".png, .jpg, .jpeg" @change="onCLChange"/>
                       </div>
                       <small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
+
                     </div>
 
-                    <br><br><br>
-
-
-                    <div class="upload-img">
+                    <div class="col-12 col-md-6 upload-img">
                       <div class="">
-                        <span><i class="fa fa-upload"></i> Car Insurance</span>
-                        <input type="file" ref="photo" name="nid_b" accept=".png, .jpg, .jpeg" @change="onCIChange"/>
+                        <span><i class="fa fa-upload"></i> Car Insurance: </span>
+                        <hr>
+                        <input type="file" ref="photo" name="nid_f" accept=".png, .jpg, .jpeg" @change="onCIChange"/>
                       </div>
                       <small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
                     </div>
-                    <br><br><br>
+                    <br>
 
-                    <div class="upload-img">
+                    <hr>
+                    <div class="col-12 col-md-6 upload-img">
                       <div class="">
-                        <span><i class="fa fa-upload"></i>Driving License</span>
-                        <input type="file" ref="photo" name="nid_b" accept=".png, .jpg, .jpeg" @change="onDLChange"/>
+                        <span><i class="fa fa-upload"></i>Driving License: </span>
+                        <hr>
+                        <input type="file" ref="photo" name="nid_f" accept=".png, .jpg, .jpeg" @change="onDLChange"/>
                       </div>
                       <small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
                     </div>
-                    <br><br><br>
-
-
-
-                    <div id="nid">
-                        <div class="upload-img">
-                          <div class="">
-                            <span><i class="fa fa-upload"></i> NID Front</span>
-                            <input type="file" ref="photo" name="nid_f" accept=".png, .jpg, .jpeg" @change="onNidFChange"/>
-                          </div>
-                          <small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
-                        </div>
-
-                      <div class="upload-img">
-                          <div class="">
-                            <span><i class="fa fa-upload"></i> NID Back</span>
-                            <input type="file" ref="photo" name="nid_b" accept=".png, .jpg, .jpeg" @change="onNidBChange"/>
-                          </div>
-                          <small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
-                        </div>
-                    </div>
 
 
 
 
 
+                    <p v-if="uploadPercent!=0">  Uploading: {{ uploadPercent }} %</p>
+                    <hr>
 
-                    <div class="form-group row">
-                      <label class="col-lg-3 col-form-label">Country</label>
-                      <div class="col-lg-9">
-                        <select v-model="parent_con" @change="getDis(parent_con)" class="form-select">
 
-                          <option v-for="(country,index) in countries.data" :key="country.id" :value="country.id">
-                            {{ country.name }}
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="form-group row">
+
+
+
+                    <hr>
+                    <div class="col-12 col-md-6 form-group row">
                       <label class="col-lg-3 col-form-label">District</label>
                       <div class="col-lg-9">
                         <select v-model="parent_dis" @change="getTha(parent_dis)" class="form-select">
@@ -128,17 +158,27 @@
                         </select>
                       </div>
                     </div>
-                    <div class="form-group row">
-                      <label class="col-lg-3 col-form-label">Thana</label>
+                    <div class="col-12 col-md-6 form-group row">
+                      <label class="col-lg-3 col-form-label">Upazila</label>
                       <div class="col-lg-9">
                         <select v-model="parent_tha" class="form-select">
+
                           <option v-for="(thana,index) in thanas.data" :key="thana.id" :value="thana.id">
+
                             {{ thana.name }}
                           </option>
                         </select>
                       </div>
                     </div>
+                    <hr>
 
+                  </div>
+
+
+                  <div v-if="errors.length!=0" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Error!</strong>
+                    <li style="text-transform: capitalize;" v-for="(error,index) in errors.fields">{{ index }}: {{ error }} </li>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
                   <div class="submit-section">
                     <button type="submit" class="btn btn-primary submit-btn">Submit application</button>
@@ -168,12 +208,16 @@ export default {
 
   data() {
     return {
+      errors:[],
       hasNid:localStorage.getItem('nid')!=null?true:false,
       cl:'',
       ci:'',
       dl:'',
       ct:'',
       cm:'',
+      addr:'',
+      rate:'',
+      oxygen:'',
       phones:'',
       thana: '',
       nid: '',
@@ -210,6 +254,9 @@ export default {
         formData.append('nid_back', this.nid_b)
 
         formData.append('nid', this.nid)
+        formData.append('addr', this.addr)
+        formData.append('rate', this.rate)
+        formData.append('oxygen', this.oxygen)
 
         formData.append('car_type', this.ct)
         formData.append('car_model', this.cm)
@@ -230,7 +277,11 @@ export default {
           this.profileUp += 1;
           if (response.data.success == true) {
             this.toast(response.data.message, "", "success")
+            setTimeout(() => {
+              window.location.reload();
+            }, 4000);
           } else {
+            this.errors=response.data
             this.toast(response.data.error, "", "danger")
           }
         }) .catch( (error) => {
@@ -249,24 +300,9 @@ export default {
     },
 
 
-    getCon() {
+    getDis() {
       // locations request - AH
-      this.axios.get("location/get/all/country/0")
-          .then(response => {
-            console.log((response.data))
-            this.countries = response.data
-            this.getDis(this.parent)
-          })
-          .catch(error => {
-            this.errorMessage = error.message;
-            console.error("There was an error!", error);
-          });
-
-
-    },
-    getDis(con) {
-      // locations request - AH
-      this.axios.get("location/get/" + con + "/district/0")
+      this.axios.get("location/get/" + 1 + "/district/0")
           .then(response => {
             console.log((response.data))
             this.districts = response.data
@@ -311,7 +347,7 @@ export default {
 
   },
   mounted() {
-    this.getCon()
+    this.getDis()
   }
 }
 </script>

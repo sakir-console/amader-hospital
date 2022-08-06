@@ -52,7 +52,6 @@ class Pion{
             Color::red();
             echo $th->getMessage();
             Color::reset();
-            echo "\n".$th->getTraceAsString();   
         }
         if(self::$again){
             echo PHP_EOL;
@@ -66,28 +65,33 @@ class Pion{
         echo '-help                         Show help menu'.PHP_EOL;
         echo '-url <base url>               Set the base url'.PHP_EOL;
         echo '-channel <channel>            Change or add new channel'.PHP_EOL;
-        echo '-config [key, val]            See or set config'.PHP_EOL;
 
         echo '-login                        Login to the server.'.PHP_EOL;
 
         
-        echo '-req <url> [key, val, ...]    Post Reguest to an url.'.PHP_EOL;
+        echo '-get <url>                    Get Reguest to an url.'.PHP_EOL;
+        echo '-post <url> [key, val, ...]   Post Reguest to an url.'.PHP_EOL;
+        
+        echo '-perm <path>                  Checks if have permission of the path.'.PHP_EOL;
 
-        echo '-ls <path>                    List files of specified directory'.PHP_EOL;
-        echo '-ren <old> <new> [--dir]      Rename a file '.PHP_EOL;
-        echo '                              add -dir to rename whole path'.PHP_EOL;
-        echo '-upload <to_dir> <files>      Upload specified file(if not exists.PHP_EOL;.'.PHP_EOL;
+        echo '-ls [path1, path2, ...]       List files of specified directories'.PHP_EOL;
+        echo '-ren <old> <new> [--force]    Rename a file '.PHP_EOL;
+        echo '                              [--force to merge if new path exists]'.PHP_EOL;
         echo '-rm <file> [--dir]            Remove a file'.PHP_EOL;
         echo '                              --dir if path is a directory'.PHP_EOL;
 
         echo '-query                        Goto query mode'.PHP_EOL;
 
-        echo '-push                         Push to remote site'.PHP_EOL;
-        echo '-push -d <dir>                Push all files of that directory'.PHP_EOL;
-        echo '-push -f <file1> <fil2> ...   Push specific files'.PHP_EOL;
-        echo '                              -y to skip confirming each files'.PHP_EOL;
+        echo '-push                         Push to remote site (Default: by git)'.PHP_EOL;
+        echo '-push * [-s]                  Push everything to remote site'.PHP_EOL;
+        echo '-push -d <dir> [-s]           Push all files of that directory'.PHP_EOL;
+        echo '-push -f <file1, file2> [-s]  Push specific files'.PHP_EOL;
+        echo '-push --skip <file, dir>      Skip the files and dirs'.PHP_EOL;
         echo '                              -s to upload files one by one'.PHP_EOL;
-        
+        Color::blue();
+        echo '                              All of them can be combined together i.e'.PHP_EOL;
+        echo '-push -f <file1, file2,...> -d <dir1, dir2,...> --skip <path1, dir1,...>'.PHP_EOL;
+        Color::reset();
         echo PHP_EOL.PHP_EOL;
     }
 

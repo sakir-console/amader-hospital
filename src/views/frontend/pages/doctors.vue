@@ -24,23 +24,52 @@
             </div>
             <div class="card-body">
 
+
+
+              <div class="form-group"><label>Hospital name</label>
+                <input  @blur="()=>{this.searchingHos=false}" @click="searchHospitals" @input="searchHospitals" type="text" v-model="searchHos" class="form-control" placeholder="Enter Hospital Name"></div>
+
               <div class="filter-widget">
                 <h4>Hospital</h4>
                 <div>
                   <div class="form-group">
 
-                    <select v-model="hos" class="select form-control select2-hidden-accessible">
-                      <option value="" selected>Select Hospital</option>
-                      <option v-for="(hospital,index) in hospitals.data" :key="hospital.id" :value="hospital.id">
-                        {{ hospital.name }}
-                      </option>
-                    </select>
+
+
+                    <div v-if="searchingHos" class="lds-ellipsis">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+
+
+                    <div v-for="(hospital,index) in hospitals.data" :key="hospital.id"
+                         :value="hospital.id" class="form-check-inlinex visits">
+                      <label class="visit-btns">
+                        <input v-model="hosNum" :value="hospital.id" type="checkbox"
+                               class="form-check-input">
+                        <span class="visit-rsn" data-bs-toggle="tooltip"
+                              title="Select Symptom">
+                                                    {{ hospital.name }}
+                                                     <br></span>
+
+
+                      </label>
+                    </div>
+
+
+
 
 
                   </div>
                 </div>
 
               </div>
+
+
+
+
               <div class="filter-widget">
                 <h4>Select Specialist</h4>
                 <div v-for="(speciality,index) in specialities.data" :key="speciality.id" :value="speciality.id">
@@ -87,12 +116,12 @@
               <div class="doctor-widget">
                 <div class="doc-info-left">
                   <div class="doctor-img">
-                    <a href="">
-                      <img :src="this.getPP(doctor)" class="img-fluid" alt="User Image">
+                    <a  v-bind:href=appointmentUrl+doctor.uid>
+                      <img :src="this.getPP(doctor)" class="img-fluid" alt="Doctor Image">
                     </a>
                   </div>
                   <div class="doc-info-cont">
-                    <h4 class="doc-name"><a href="#">{{ doctor.title }}</a></h4>
+                    <h4 class="doc-name"><a  v-bind:href=appointmentUrl+doctor.uid>{{ doctor.name }}({{ doctor.title }})</a></h4>
                     <p class="doc-speciality">@{{ doctor.username }}</p>
                     <h5 class="doc-department">{{doctor.sect_name}}</h5>
                     <div class="rating">
@@ -108,22 +137,22 @@
                       <ul class="clinic-gallery">
                         <li>
                           <a href="assets/img/features/feature-01.jpg" data-fancybox="gallery">
-                            <img src="frontend/assets/img/features/feature-01.jpg" alt="Feature">
+                            <img :src="this.asset_url+'/frontend/assets/img/features/feature-01.jpg'" alt="Feature">
                           </a>
                         </li>
                         <li>
                           <a href="assets/img/features/feature-02.jpg" data-fancybox="gallery">
-                            <img src="frontend/assets/img/features/feature-02.jpg" alt="Feature">
+                            <img :src="this.asset_url+'/frontend/assets/img/features/feature-02.jpg'" alt="Feature">
                           </a>
                         </li>
                         <li>
                           <a href="assets/img/features/feature-03.jpg" data-fancybox="gallery">
-                            <img src="frontend/assets/img/features/feature-03.jpg" alt="Feature">
+                            <img :src="this.asset_url+'/frontend/assets/img/features/feature-03.jpg'" alt="Feature">
                           </a>
                         </li>
                         <li>
                           <a href="assets/img/features/feature-04.jpg" data-fancybox="gallery">
-                            <img src="frontend/assets/img/features/feature-04.jpg" alt="Feature">
+                            <img :src="this.asset_url+'/frontend/assets/img/features/feature-04.jpg'" alt="Feature">
                           </a>
                         </li>
                       </ul>
@@ -160,7 +189,7 @@
                   <a class="page-link" href="#" tabindex="-1">Pages:</a>
                 </li>
                 <li v-for="index in doctors['maxPage']" :key="index" :class="[(page == index) ? 'active':'']">
-                  <a style="color: white;font-weight: 900;" class="page-link" href="#" @click="nextPage(index)">{{ index }}</a>
+                  <a style="color: white;font-weight: 600;color:#15558d" class="page-link" href="#" @click="nextPage(index)">{{ index }}</a>
                 </li>
 
               </ul>
@@ -175,20 +204,27 @@
 </template>
 
 <script>
+
 export default {
 name: "doctors",
   data() {
     return {
       appointmentUrl:'/appointment?doc=',
       loading: false,
+
+      hosNum: [],
+      searchHos:'',
+      searchingHos:false,
+      hos:'',
+
       page: 1,
       NoData:false,
 
       spec:'',
-      hos:'',
       doctors: [],
       hospitals:[],
       specialities:[],
+
 
     }
   },
@@ -197,7 +233,7 @@ name: "doctors",
     // Specialities FETCH request - AH
     viewDocs() {
       this.loading = true
-      this.axios.get("doctor?page="+this.page+"&hospital="+this.hos+"&sector="+this.spec+"&verified=1")
+      this.axios.get("doctor?page="+this.page+"&hospital="+this.hosNum+"&sector="+this.spec+"&verified=1")
           .then(response => {
             this.loading = false
             if(response.data.data.length!==0){this.NoData=false}else{this.NoData=true}
@@ -209,20 +245,36 @@ name: "doctors",
       });
     },
 
-    hospitalView() {
-
-      // locations request - AH
-      this.axios.get("hospital/0/0")
+    hospitalList() {
+      // searchHos request - AH
+      this.axios.get("hospital/search?q="+this.searchHos)
           .then(response => {
             this.loading = false;
             console.log((response.data))
-            this.hospitals = response.data
+            if (response.data.success == true) {
+              this.hospitals = response.data
+              if (response.data.data.length !== 0) {
+                this.searchingHos=false
+              }
+
+            }
           })
           .catch(error => {
             this.errorMessage = error.message;
             console.error("There was an error!", error);
           });
     },
+
+    searchHospitals(){
+      this.searchingHos=true
+        if(this.searchHos!=''){
+          this.hospitalList()
+        }
+
+    },
+
+
+
     viewSpec() {
       this.axios.get("doctor/sectors")
           .then(response => {
@@ -233,6 +285,8 @@ name: "doctors",
         console.error("There was an error!", error);
       });
     },
+
+
     nextPage(pg) {
       this.page = pg
       this.viewDocs()
@@ -240,7 +294,6 @@ name: "doctors",
   },
   mounted() {
     this.viewDocs()
-    this.hospitalView()
     this.viewSpec()
   }
 }
@@ -249,6 +302,72 @@ name: "doctors",
 
 
 <style scoped>
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+
+  height: 80px;
+  margin-left: 35%;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #2cb09b;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
+
+
+
+
+
+
+
 .circle-loader {
   position: relative;
 

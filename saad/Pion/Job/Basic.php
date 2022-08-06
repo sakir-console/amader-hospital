@@ -3,11 +3,40 @@
 namespace Pion\Job;
 
 use Pion\Color;
+use Pion\Config;
 use Pion\Http;
 use Pion\Pion;
 
 trait Basic{
     
+
+    public function url($cmd){
+        if(sizeof($cmd) == 0){
+            echo Config::get('url').PHP_EOL;
+        }else{
+            Config::set('url', $cmd[0]);
+        }
+    }
+
+    
+    public function perm(array $dirs){
+        echo 'Please wait...';
+        if(!isset($dirs[0])){
+            $dirs[0] = '.';
+        }
+        $res = Http::post('check_perm', ['path'=>$dirs[0]]);
+        $this->clear(14);
+        if(!$res->result){
+            Color::red();
+            echo '(!) '.$res->error;
+            Color::reset();
+            return;
+        }
+        
+        Color::green();
+        echo '(!) '.$res->result;
+        Color::reset();
+    }
 
     public function ls(array $dirs){
         echo 'Please wait...';
